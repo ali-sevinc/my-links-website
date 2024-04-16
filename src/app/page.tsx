@@ -1,10 +1,11 @@
 "use client";
 
-import { signIn, useSession } from "next-auth/react";
+import Home from "@/components/ui/Home";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Home() {
+export default function HomePage() {
   const { data } = useSession();
   const router = useRouter();
 
@@ -20,10 +21,5 @@ export default function Home() {
     [data, router]
   );
 
-  return (
-    <div>
-      <h1>Welcome to MyLinks</h1>
-      <button onClick={() => signIn()}>Sign in</button>
-    </div>
-  );
+  return <Home />;
 }
