@@ -9,8 +9,6 @@ export default function HomePage() {
   const { data } = useSession();
   const router = useRouter();
 
-  console.log(data);
-
   useEffect(
     function () {
       if (data) {

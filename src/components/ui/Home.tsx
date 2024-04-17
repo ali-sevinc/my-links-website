@@ -13,6 +13,7 @@ export default function Home() {
         <p>or</p>
         <Button onClick={() => router.push("/signup")}>Sign Up</Button>
       </div>
+      <p>With Google.</p>
     </Container>
   );
 }
