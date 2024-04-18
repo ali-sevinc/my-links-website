@@ -14,7 +14,7 @@ export default function InputGroup({
 }: PropsType) {
   return (
     <p className="flex gap-4 w-full items-center">
-      <label htmlFor={id} className="w-24">
+      <label htmlFor={id} className="w-24 text-sm md:text-base">
         {label}
       </label>
       <input

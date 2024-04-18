@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/auth/SessionWrapper";
 import Nav from "@/components/ui/Nav";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${inter.className} min-h-screen`}>
           <Nav />
-          <main className=" pt-4 pb-28">{children}</main>
+          <Suspense>
+            <main className=" pt-4 pb-28">{children}</main>
+          </Suspense>
         </body>
       </html>
     </SessionWrapper>

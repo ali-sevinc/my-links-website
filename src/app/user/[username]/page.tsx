@@ -2,7 +2,9 @@
 
 import LinkForm from "@/components/LinkForm";
 import Button from "@/components/ui/Button";
+import LinkItem from "@/components/ui/LinkItem";
 import Modal from "@/components/ui/Modal";
+import ProfileCard from "@/components/ui/ProfileCard";
 import { app } from "@/firebase";
 import {
   collection,
@@ -132,39 +134,24 @@ export default function UserPage({ params }: { params: { username: string } }) {
         </div>
       )}
       {userData && (
-        <div className="max-w-md mx-auto flex flex-col items-center py-4 justify-center">
-          <img
-            src={userData.profileImage}
-            alt={userData.username}
-            className="rounded-full p-2 w-32 border-4 h-32"
-          />
-          <p>{userData.username}&apos;s link tree</p>
-        </div>
+        <ProfileCard
+          username={userData.username}
+          image={userData.profileImage}
+        />
       )}
       {storedLinks.length > 0 && (
-        <ul className="max-w-xl flex flex-col mx-auto gap-4 justify-center items-center">
+        <ul className="max-w-xl flex flex-col mx-auto gap-4 px-1 justify-center items-center">
           {storedLinks.map((link) => (
-            <li key={link.id} className={` gap-2 rounded-md w-full flex `}>
-              <a
-                target="_blank"
-                href={link.enteredUrl}
-                style={{
-                  backgroundColor: link.btnColor,
-                  color: link.textColor,
-                }}
-                className={`w-full border border-zinc-700 hover:translate-x-2 duration-200  px-4 py-2 text-center text-lg rounded-md font-semibold `}
-              >
-                {link.enteredText}
-              </a>
-              {data && (
-                <button
-                  onClick={() => handleDeleteLink(link.id)}
-                  className="px-4 bg-red-700 rounded-md text-zinc-50 hover:bg-red-900 duration-200"
-                >
-                  <HiOutlineTrash />
-                </button>
-              )}
-            </li>
+            <LinkItem
+              onDelete={() => handleDeleteLink(link.id)}
+              isAuth={data !== null}
+              text={link.enteredText}
+              btnColor={link.btnColor}
+              color={link.textColor}
+              url={link.enteredUrl}
+              key={link.id}
+              id={link.id}
+            />
           ))}
         </ul>
       )}
@@ -176,9 +163,11 @@ export default function UserPage({ params }: { params: { username: string } }) {
       )}
       {isAuth && userData && (
         <>
-          <Modal open={showAddForm} onClose={handleHideForm}>
-            <LinkForm userData={userData} onCloseForm={handleHideForm} />
-          </Modal>
+          {showAddForm && (
+            <Modal open={showAddForm} onClose={handleHideForm}>
+              <LinkForm userData={userData} onCloseForm={handleHideForm} />
+            </Modal>
+          )}
           <p className="text-center mt-4">
             <Button onClick={handleShowForm}>Add New Link</Button>
           </p>

@@ -28,6 +28,7 @@ type PropsType = { userData: UserDataType; onCloseForm: () => void };
 export default function LinkForm({ userData, onCloseForm }: PropsType) {
   const [enteredUrl, setEnteredUrl] = useState("");
   const [enteredText, setEnteredText] = useState("");
+
   const [btnColor, setBtnColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
 
@@ -38,8 +39,8 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
 
   async function handleAddLink(event: FormEvent) {
     event.preventDefault();
-    setIsLoading(true);
     if (!enteredUrl || !data || !userData || !enteredText) return;
+    setIsLoading(true);
     await addDoc(collection(db, "links", userData.docId, "link"), {
       enteredUrl,
       enteredText,
@@ -58,7 +59,7 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
   return (
     <form
       onSubmit={handleAddLink}
-      className="bg-stone-100 flex flex-col gap-2 w-full max-w-xl mx-auto px-8 py-6"
+      className="bg-stone-100 flex flex-col gap-2 w-full max-w-xl mx-auto px-2 md:px-8 py-6"
     >
       <h2 className="text-center text-2xl font-semibold mb-4">Add Link</h2>
       <InputGroup
@@ -74,25 +75,37 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
         value={enteredText}
         onChange={setEnteredText}
       />
-      <div className="flex items-center justify-center gap-8 my-4">
-        <p className="flex items-center gap-1">
-          <label htmlFor="button-color">Button Color</label>
-          <input
-            type="color"
-            id="button-color"
-            value={btnColor}
-            onChange={(e) => setBtnColor(e.target.value)}
-          />
-        </p>
-        <p className="flex items-center gap-1">
-          <label htmlFor="text-color">Text Color</label>
-          <input
-            type="color"
-            id="text-color"
-            value={textColor}
-            onChange={(e) => setTextColor(e.target.value)}
-          />
-        </p>
+      <div className="flex items-center justify-center gap-2 flex-col my-4">
+        <button
+          type="button"
+          style={{
+            backgroundColor: btnColor,
+            color: textColor,
+          }}
+          className="px-4 py-2 rounded font-semibold text-lg"
+        >
+          Test Link Button
+        </button>
+        <div className="flex flex-col md:flex-row gap-2">
+          <p className="flex items-center gap-1 justify-between">
+            <label htmlFor="button-color">Background</label>
+            <input
+              type="color"
+              id="button-color"
+              value={btnColor}
+              onChange={(e) => setBtnColor(e.target.value)}
+            />
+          </p>
+          <p className="flex items-center justify-between gap-1">
+            <label htmlFor="text-color">Text</label>
+            <input
+              type="color"
+              id="text-color"
+              value={textColor}
+              onChange={(e) => setTextColor(e.target.value)}
+            />
+          </p>
+        </div>
       </div>
       <div className="flex gap-4 items-center justify-center">
         <Button disabled={isLoading} type="submit">
