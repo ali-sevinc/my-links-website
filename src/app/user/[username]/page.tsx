@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import LinkItem from "@/components/ui/LinkItem";
 import Modal from "@/components/ui/Modal";
 import ProfileCard from "@/components/ui/ProfileCard";
+import UserHeader from "@/components/ui/UserHeader";
 import { app } from "@/firebase";
 import {
   collection,
@@ -18,8 +19,9 @@ import {
   where,
 } from "firebase/firestore";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
-import { HiOutlineTrash } from "react-icons/hi";
 
 type SessionType = {
   data: {
@@ -53,7 +55,10 @@ export default function UserPage({ params }: { params: { username: string } }) {
   const [storedLinks, setStoredLinks] = useState<LinkType[]>([]);
 
   const { data } = useSession() as SessionType;
+
   const isAuth = data && data.user.username === params.username;
+
+  const router = useRouter();
 
   //connect database;
   const db = getFirestore(app);
@@ -97,14 +102,6 @@ export default function UserPage({ params }: { params: { username: string } }) {
     [db, userData]
   );
 
-  function handleCopyUrl() {
-    const url = window.location.href;
-    navigator.clipboard
-      .writeText(url)
-      .then(() => alert(`${url} coppied`))
-      .catch((e) => console.error(e));
-  }
-
   async function handleDeleteLink(id: string) {
     if (!data || !userData) return;
 
@@ -117,22 +114,16 @@ export default function UserPage({ params }: { params: { username: string } }) {
   function handleHideForm() {
     setShowAddForm(false);
   }
+  async function handleSingOutAndSingUp() {
+    router.push("/signup");
+  }
 
   // console.log("stored link", storedLinks);
   // console.log("UserData", userData);
   // console.log(btnColor.split("#")[1]);
   return (
     <div>
-      {isAuth && (
-        <div className="flex gap-4 justify-end px-4">
-          <Button model="small" onClick={handleCopyUrl}>
-            Copy Your Page
-          </Button>
-          <Button model="small" onClick={() => signOut()}>
-            Logout
-          </Button>
-        </div>
-      )}
+      {isAuth && userData && <UserHeader />}
       {userData && (
         <ProfileCard
           username={userData.username}
@@ -156,10 +147,18 @@ export default function UserPage({ params }: { params: { username: string } }) {
         </ul>
       )}
 
-      {!storedLinks.length && (
+      {!storedLinks.length && userData && (
         <p className="text-center font-semibold text-xl">
           There is no link to see
         </p>
+      )}
+      {!userData && data && (
+        <div className="flex flex-col gap-2 items-center justify-center pt-12">
+          <p className="text-2xl">{params.username} not found.</p>
+          <Button onClick={handleSingOutAndSingUp}>
+            Sing Up as {data.user.username}
+          </Button>
+        </div>
       )}
       {isAuth && userData && (
         <>
@@ -168,7 +167,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
               <LinkForm userData={userData} onCloseForm={handleHideForm} />
             </Modal>
           )}
-          <p className="text-center mt-4">
+          <p className="max-w-xl mx-auto px-2 m-4">
             <Button onClick={handleShowForm}>Add New Link</Button>
           </p>
         </>

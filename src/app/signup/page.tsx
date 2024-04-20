@@ -12,7 +12,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -68,6 +68,9 @@ export default function SignUpPage() {
       timestamp: serverTimestamp(),
     }).then(() => router.push(`/user/${data.user.username}`));
   }
+  function handleGoBack() {
+    signOut();
+  }
 
   return (
     <Container>
@@ -76,11 +79,19 @@ export default function SignUpPage() {
           <h2 className="font-semibold text-lg">
             Click to the button to create your account with gmail.
           </h2>
-          <Button onClick={() => signIn()}>Sign Up</Button>
+          <div className="flex gap-4 items-center">
+            <Link href={"/"} className="hover:underline">
+              Go Back
+            </Link>
+            <Button onClick={() => signIn()}>Sign Up</Button>
+          </div>
         </>
       )}
       {data && !createError && (
-        <Button onClick={createAcc}>Activate {data.user.username}</Button>
+        <div className="flex gap-4">
+          <Button onClick={handleGoBack}>Cancel</Button>
+          <Button onClick={createAcc}>Activate {data.user.username}</Button>
+        </div>
       )}
       {createError && data && (
         <div>

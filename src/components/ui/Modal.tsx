@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 type PropsType = { open: boolean; onClose: () => void; children: ReactNode };
 export default function Modal({ open, onClose, children }: PropsType) {
@@ -15,7 +16,7 @@ export default function Modal({ open, onClose, children }: PropsType) {
     },
     [open]
   );
-  return (
+  return createPortal(
     <dialog
       ref={ref}
       onClose={onClose}
@@ -28,6 +29,7 @@ export default function Modal({ open, onClose, children }: PropsType) {
       >
         X
       </button>
-    </dialog>
+    </dialog>,
+    document.body
   );
 }
