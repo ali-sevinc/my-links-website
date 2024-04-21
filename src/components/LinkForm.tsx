@@ -5,18 +5,8 @@ import { FormEvent, useState } from "react";
 import Button from "./ui/Button";
 import { serverTimestamp } from "firebase/database";
 import InputGroup from "./ui/InputGroup";
+import { SessionType } from "@/helpers/types";
 
-type SessionType = {
-  data: {
-    user: {
-      userId: string;
-      email: string;
-      image: string;
-      name: string;
-      username: string;
-    };
-  } | null;
-};
 type UserDataType = {
   profileImage: string;
   userId: string;

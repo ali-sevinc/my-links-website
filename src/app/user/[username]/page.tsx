@@ -7,6 +7,7 @@ import Modal from "@/components/ui/Modal";
 import ProfileCard from "@/components/ui/ProfileCard";
 import UserHeader from "@/components/ui/UserHeader";
 import { app } from "@/firebase";
+import { SessionType } from "@/helpers/types";
 import {
   collection,
   deleteDoc,
@@ -23,23 +24,12 @@ import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-type SessionType = {
-  data: {
-    user: {
-      userId: string;
-      email: string;
-      image: string;
-      name: string;
-      username: string;
-    };
-  } | null;
-};
-
 type UserDataType = {
   profileImage: string;
   userId: string;
   username: string;
   docId: string;
+  displayName: string;
 };
 type LinkType = {
   enteredUrl: string;
@@ -126,7 +116,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
       {isAuth && userData && <UserHeader />}
       {userData && (
         <ProfileCard
-          username={userData.username}
+          username={userData?.displayName || userData.username}
           image={userData.profileImage}
         />
       )}

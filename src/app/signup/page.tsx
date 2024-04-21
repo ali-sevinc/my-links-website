@@ -3,6 +3,7 @@
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import { app } from "@/firebase";
+import { SessionType } from "@/helpers/types";
 import { serverTimestamp } from "firebase/database";
 import {
   addDoc,
@@ -15,19 +16,8 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-type SessionType = {
-  data: {
-    user: {
-      userId: string;
-      email: string;
-      image: string;
-      name: string;
-      username: string;
-    };
-  } | null;
-};
 type UserDataType = {
   profileImage: string;
   userId: string;
