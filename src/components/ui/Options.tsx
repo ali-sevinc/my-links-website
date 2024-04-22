@@ -48,6 +48,7 @@ export default function Options() {
       console.log("Display Name successfully changed");
       setDisplayName("");
       location.reload();
+      // revalidatePath("/user", "layout");
     } catch (error) {
       console.error("Error", error);
       setIsError("Updating display name failed.");
@@ -61,7 +62,7 @@ export default function Options() {
       <h2 className="text-center text-xl font-semibold mb-4">Change Name</h2>
       <form
         onSubmit={handleChangeDisplayName}
-        className="flex flex-col gap-4 items-center"
+        className="flex gap-4 items-center"
       >
         <InputGroup
           id="displayName"
@@ -70,7 +71,7 @@ export default function Options() {
           value={displayName}
         />
         <Button disabled={isLoading} type="submit">
-          {isLoading ? "Submitting..." : "Submit"}
+          {isLoading ? "Changing..." : "Change"}
         </Button>
       </form>
     </div>

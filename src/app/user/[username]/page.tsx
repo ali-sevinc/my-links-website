@@ -3,6 +3,7 @@
 import LinkForm from "@/components/LinkForm";
 import Button from "@/components/ui/Button";
 import LinkItem from "@/components/ui/LinkItem";
+import Message from "@/components/ui/Message";
 import Modal from "@/components/ui/Modal";
 import ProfileCard from "@/components/ui/ProfileCard";
 import UserHeader from "@/components/ui/UserHeader";
@@ -104,15 +105,17 @@ export default function UserPage({ params }: { params: { username: string } }) {
   function handleHideForm() {
     setShowAddForm(false);
   }
-  async function handleSingOutAndSingUp() {
-    router.push("/signup");
-  }
 
   // console.log("stored link", storedLinks);
   // console.log("UserData", userData);
   // console.log(btnColor.split("#")[1]);
   return (
     <div>
+      {!userData && (
+        <Message buttonText="Signup" onClick={() => router.push("/signup")}>
+          {params.username} not found.
+        </Message>
+      )}
       {isAuth && userData && <UserHeader />}
       {userData && (
         <ProfileCard
@@ -142,14 +145,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
           There is no link to see
         </p>
       )}
-      {!userData && data && (
-        <div className="flex flex-col gap-2 items-center justify-center pt-12">
-          <p className="text-2xl">{params.username} not found.</p>
-          <Button onClick={handleSingOutAndSingUp}>
-            Sing Up as {data.user.username}
-          </Button>
-        </div>
-      )}
+
       {isAuth && userData && (
         <>
           {showAddForm && (

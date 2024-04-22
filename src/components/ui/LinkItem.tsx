@@ -28,7 +28,7 @@ export default function LinkItem({
           backgroundColor: btnColor,
           color: color,
         }}
-        className={`w-full border border-zinc-700 hover:translate-x-2 duration-200  px-4 py-2 text-center text-lg rounded-md font-semibold `}
+        className="w-full border hover:opacity-95 border-zinc-700 hover:translate-x-2 duration-200  px-4 py-2 text-center text-lg rounded-md font-semibold"
       >
         {text}
       </a>
