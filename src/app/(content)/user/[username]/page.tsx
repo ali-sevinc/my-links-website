@@ -3,6 +3,7 @@
 import LinkForm from "@/components/LinkForm";
 import Button from "@/components/ui/Button";
 import LinkItem from "@/components/ui/LinkItem";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import Message from "@/components/ui/Message";
 import Modal from "@/components/ui/Modal";
 import ProfileCard from "@/components/ui/ProfileCard";
@@ -43,6 +44,8 @@ export default function UserPage({ params }: { params: { username: string } }) {
   const [userData, setUserData] = useState<UserDataType | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [storedLinks, setStoredLinks] = useState<LinkType[]>([]);
 
   const { data } = useSession() as SessionType;
@@ -57,6 +60,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
   useEffect(
     function () {
       async function getUserData() {
+        setIsLoading(true);
         const qu = query(
           collection(db, "links"),
           where("username", "==", params.username)
@@ -68,6 +72,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
         })) as UserDataType[];
 
         setUserData(mappedData?.[0] || null);
+        setIsLoading(false);
       }
       getUserData();
     },
@@ -111,7 +116,8 @@ export default function UserPage({ params }: { params: { username: string } }) {
   // console.log(btnColor.split("#")[1]);
   return (
     <div>
-      {!userData && (
+      {isLoading && <LoadingSpinner />}
+      {!userData && !isLoading && (
         <Message buttonText="Signup" onClick={() => router.push("/signup")}>
           {params.username} not found.
         </Message>

@@ -17,14 +17,16 @@ import { app } from "@/firebase";
 import { SessionType } from "@/helpers/types";
 import InputGroup from "./InputGroup";
 import Button from "./Button";
+import { useRouter } from "next/navigation";
 
 export default function Options() {
-  const [displayName, setDisplayName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState<string | null>(null);
-
   const { data } = useSession() as SessionType;
   const db = getFirestore(app);
+
+  const [displayName, setDisplayName] = useState(data?.user.username || "");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState<string | null>(null);
+  const router = useRouter();
 
   async function handleChangeDisplayName(event: FormEvent) {
     event.preventDefault();
@@ -47,7 +49,7 @@ export default function Options() {
       });
       console.log("Display Name successfully changed");
       setDisplayName("");
-      location.reload();
+      router.refresh();
       // revalidatePath("/user", "layout");
     } catch (error) {
       console.error("Error", error);
