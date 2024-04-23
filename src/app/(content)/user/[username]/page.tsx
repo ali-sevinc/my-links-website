@@ -123,7 +123,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
         </Message>
       )}
       {isAuth && userData && <UserHeader />}
-      {userData && (
+      {userData && !isLoading && (
         <ProfileCard
           username={userData?.displayName || userData.username}
           image={userData.profileImage}
@@ -146,7 +146,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
         </ul>
       )}
 
-      {!storedLinks.length && userData && (
+      {!storedLinks.length && userData && !isLoading && (
         <p className="text-center font-semibold text-xl">
           There is no link to see
         </p>
