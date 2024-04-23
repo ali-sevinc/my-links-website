@@ -20,7 +20,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
