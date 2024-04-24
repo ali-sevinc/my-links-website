@@ -6,9 +6,8 @@ import SessionWrapper from "@/components/auth/SessionWrapper";
 
 import Nav from "@/components/ui/Nav";
 
+import { nunito, roboto } from "@/helpers/fonts";
 import "../globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MyLinks",
@@ -22,8 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <SessionWrapper>
-      <html lang="en">
-        <body className={`${inter.className} min-h-screen`}>
+      <html lang="en" className={`${nunito.variable} ${roboto.variable}`}>
+        <body className="min-h-screen">
           <Nav />
           <Suspense>
             <main className=" pt-4 pb-28">{children}</main>

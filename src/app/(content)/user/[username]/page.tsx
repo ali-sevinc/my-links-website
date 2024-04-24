@@ -86,7 +86,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
       onSnapshot(
         query(
           collection(db, "links", userData.docId, "link"),
-          orderBy("timestamp", "asc")
+          orderBy("timestamp", "desc")
         ),
         (snapshot) => {
           setStoredLinks(

@@ -4,9 +4,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import SessionWrapper from "@/components/auth/SessionWrapper";
 
+import { nunito, roboto } from "@/helpers/fonts";
 import "../globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MyLinks",
@@ -20,8 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <SessionWrapper>
-      <html lang="en">
-        <body className={`${inter.className} min-h-screen`}>
+      <html lang="en" className={`${nunito.variable} ${roboto.variable}`}>
+        <body className="min-h-screen bg-repeat-round bg-gradient-to-br from-zinc-500 to-zinc-800 text-zinc-100 via-zinc-700 ">
           <Suspense>
             <main className=" pt-4 pb-28">{children}</main>
           </Suspense>

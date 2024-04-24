@@ -18,6 +18,7 @@ import { SessionType } from "@/helpers/types";
 import InputGroup from "./InputGroup";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
+import Heading from "./Heading";
 
 export default function Options() {
   const { data } = useSession() as SessionType;
@@ -61,7 +62,9 @@ export default function Options() {
 
   return (
     <div className="px-4 py-3 bg-zinc-100">
-      <h2 className="text-center text-xl font-semibold mb-4">Change Name</h2>
+      <div className="text-center mb-4">
+        <Heading as="h2">Change Name</Heading>
+      </div>
       <form
         onSubmit={handleChangeDisplayName}
         className="flex gap-4 items-center"

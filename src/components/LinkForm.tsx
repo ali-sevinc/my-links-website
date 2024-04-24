@@ -6,6 +6,7 @@ import Button from "./ui/Button";
 import { serverTimestamp } from "firebase/database";
 import InputGroup from "./ui/InputGroup";
 import { SessionType } from "@/helpers/types";
+import Heading from "./ui/Heading";
 
 type UserDataType = {
   profileImage: string;
@@ -51,7 +52,10 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
       onSubmit={handleAddLink}
       className="bg-stone-100 flex flex-col gap-2 w-full max-w-xl mx-auto px-2 md:px-8 py-6"
     >
-      <h2 className="text-center text-2xl font-semibold mb-4">Add Link</h2>
+      <div className="text-center mb-4">
+        <Heading as="h2">Add Link</Heading>
+      </div>
+
       <InputGroup
         id="url"
         label="Link URL"
