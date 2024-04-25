@@ -24,9 +24,7 @@ export default function RootLayout({
       <html lang="en" className={`${nunito.variable} ${roboto.variable}`}>
         <body className="min-h-screen">
           <Nav />
-          <Suspense>
-            <main className=" pt-4 pb-28">{children}</main>
-          </Suspense>
+          <Suspense>{children}</Suspense>
         </body>
       </html>
     </SessionWrapper>

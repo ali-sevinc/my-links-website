@@ -6,6 +6,7 @@ import LinkItem from "@/components/ui/LinkItem";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import Message from "@/components/ui/Message";
 import Modal from "@/components/ui/Modal";
+import Options from "@/components/ui/Options";
 import ProfileCard from "@/components/ui/ProfileCard";
 import UserHeader from "@/components/ui/UserHeader";
 import { app } from "@/firebase";
@@ -32,6 +33,8 @@ type UserDataType = {
   username: string;
   docId: string;
   displayName: string;
+  backgroundColor: string;
+  textColor: string;
 };
 type LinkType = {
   enteredUrl: string;
@@ -48,14 +51,17 @@ export default function UserPage({ params }: { params: { username: string } }) {
 
   const [storedLinks, setStoredLinks] = useState<LinkType[]>([]);
 
+  const [showOptions, setShowOptions] = useState(false);
+
   const { data } = useSession() as SessionType;
 
   const isAuth = data && data.user.username === params.username;
 
   const router = useRouter();
 
-  //connect database;
   const db = getFirestore(app);
+
+  const displayName = userData?.displayName;
 
   useEffect(
     function () {
@@ -76,7 +82,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
       }
       getUserData();
     },
-    [db, params.username, data]
+    [db, params.username, data, displayName]
   );
 
   useEffect(
@@ -111,59 +117,84 @@ export default function UserPage({ params }: { params: { username: string } }) {
     setShowAddForm(false);
   }
 
+  //options modal control.
+  function handleShowOptions() {
+    setShowOptions(true);
+  }
+  function handleHideOptions() {
+    setShowOptions(false);
+  }
+
   // console.log("stored link", storedLinks);
   // console.log("UserData", userData);
   // console.log(btnColor.split("#")[1]);
   return (
-    <div>
-      {isLoading && <LoadingSpinner />}
-      {!userData && !isLoading && (
-        <Message buttonText="Signup" onClick={() => router.push("/signup")}>
-          {params.username} not found.
-        </Message>
-      )}
-      {isAuth && userData && <UserHeader />}
-      {userData && !isLoading && (
-        <ProfileCard
-          username={userData?.displayName || userData.username}
-          image={userData.profileImage}
-        />
-      )}
-      {storedLinks.length > 0 && (
-        <ul className="max-w-xl flex flex-col mx-auto gap-4 px-1 justify-center items-center">
-          {storedLinks.map((link) => (
-            <LinkItem
-              onDelete={() => handleDeleteLink(link.id)}
-              isAuth={data !== null}
-              text={link.enteredText}
-              btnColor={link.btnColor}
-              color={link.textColor}
-              url={link.enteredUrl}
-              key={link.id}
-              id={link.id}
-            />
-          ))}
-        </ul>
-      )}
+    <>
+      <div
+        style={{
+          backgroundColor: userData?.backgroundColor || "#fff",
+          color: userData?.textColor || "#111",
+        }}
+        className="min-h-screen pt-4 pb-28"
+      >
+        {isLoading && <LoadingSpinner />}
+        {!userData && !isLoading && (
+          <Message buttonText="Signup" onClick={() => router.push("/signup")}>
+            {params.username} not found.
+          </Message>
+        )}
+        {isAuth && userData && <UserHeader onShowOptions={handleShowOptions} />}
+        {userData && !isLoading && (
+          <ProfileCard
+            username={userData?.displayName || userData.username}
+            image={userData.profileImage}
+          />
+        )}
+        {storedLinks.length > 0 && (
+          <ul className="max-w-xl flex flex-col mx-auto gap-4 px-1 justify-center items-center">
+            {storedLinks.map((link) => (
+              <LinkItem
+                onDelete={() => handleDeleteLink(link.id)}
+                isAuth={data !== null}
+                text={link.enteredText}
+                btnColor={link.btnColor}
+                color={link.textColor}
+                url={link.enteredUrl}
+                key={link.id}
+                id={link.id}
+              />
+            ))}
+          </ul>
+        )}
 
-      {!storedLinks.length && userData && !isLoading && (
-        <p className="text-center font-semibold text-xl">
-          There is no link to see
-        </p>
-      )}
-
-      {isAuth && userData && (
-        <>
-          {showAddForm && (
-            <Modal open={showAddForm} onClose={handleHideForm}>
-              <LinkForm userData={userData} onCloseForm={handleHideForm} />
-            </Modal>
-          )}
-          <p className="max-w-xl mx-auto px-2 m-4">
-            <Button onClick={handleShowForm}>Add New Link</Button>
+        {!storedLinks.length && userData && !isLoading && (
+          <p className="text-center font-semibold text-xl">
+            There is no link to see
           </p>
-        </>
+        )}
+
+        {isAuth && userData && (
+          <>
+            {showAddForm && (
+              <Modal open={showAddForm} onClose={handleHideForm}>
+                <LinkForm userData={userData} onCloseForm={handleHideForm} />
+              </Modal>
+            )}
+            <p className="max-w-xl mx-auto px-2 m-4">
+              <Button onClick={handleShowForm}>Add New Link</Button>
+            </p>
+          </>
+        )}
+      </div>
+      {showOptions && (
+        <Modal open={showOptions} onClose={handleHideOptions}>
+          <Options
+            name={userData?.displayName || data?.user.username}
+            bgColor={userData?.backgroundColor}
+            txtColor={userData?.textColor}
+          />
+        </Modal>
       )}
-    </div>
+    </>
   );
 }

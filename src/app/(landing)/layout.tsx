@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
-import { Inter } from "next/font/google";
 import SessionWrapper from "@/components/auth/SessionWrapper";
 
 import { nunito, roboto } from "@/helpers/fonts";
