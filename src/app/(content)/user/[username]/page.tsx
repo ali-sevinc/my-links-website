@@ -22,8 +22,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
+import { motion } from "framer-motion";
 
 import { useEffect, useState } from "react";
 
@@ -172,29 +175,32 @@ export default function UserPage({ params }: { params: { username: string } }) {
             There is no link to see
           </p>
         )}
-
         {isAuth && userData && (
           <>
-            {showAddForm && (
-              <Modal open={showAddForm} onClose={handleHideForm}>
-                <LinkForm userData={userData} onCloseForm={handleHideForm} />
-              </Modal>
-            )}
+            <AnimatePresence mode="wait">
+              {showAddForm && (
+                <Modal open={showAddForm} onClose={handleHideForm}>
+                  <LinkForm userData={userData} onCloseForm={handleHideForm} />
+                </Modal>
+              )}
+            </AnimatePresence>
             <p className="max-w-xl mx-auto px-2 m-4">
               <Button onClick={handleShowForm}>Add New Link</Button>
             </p>
           </>
         )}
       </div>
-      {showOptions && (
-        <Modal open={showOptions} onClose={handleHideOptions}>
-          <Options
-            name={userData?.displayName || data?.user.username}
-            bgColor={userData?.backgroundColor}
-            txtColor={userData?.textColor}
-          />
-        </Modal>
-      )}
+      <AnimatePresence>
+        {showOptions && (
+          <Modal open={showOptions} onClose={handleHideOptions}>
+            <Options
+              name={userData?.displayName || data?.user.username}
+              bgColor={userData?.backgroundColor}
+              txtColor={userData?.textColor}
+            />
+          </Modal>
+        )}
+      </AnimatePresence>
     </>
   );
 }

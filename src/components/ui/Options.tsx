@@ -35,6 +35,8 @@ export default function Options({ name, bgColor, txtColor }: PropsType) {
   const db = getFirestore(app);
 
   const [displayName, setDisplayName] = useState(name || "");
+  const [nameError, setNameError] = useState("");
+
   const [background, setBackground] = useState(bgColor || "#ffffff");
   const [text, setText] = useState(txtColor || "#111111");
 
@@ -46,6 +48,9 @@ export default function Options({ name, bgColor, txtColor }: PropsType) {
     event.preventDefault();
     setIsError(null);
     setIsLoading(false);
+    if (!displayName.trim().length) {
+      setNameError("Invalid name. This line cannot be empty.");
+    }
     if (!data || !displayName.trim().length) return;
 
     setIsLoading(true);
@@ -111,8 +116,13 @@ export default function Options({ name, bgColor, txtColor }: PropsType) {
         <InputGroup
           id="displayName"
           label="Name"
-          onChange={setDisplayName}
+          name="displayName"
+          onChange={(val: string) => {
+            setDisplayName(val);
+            setNameError("");
+          }}
           value={displayName}
+          error={nameError}
         />
         <Button disabled={isLoading} type="submit">
           {isLoading ? "Saving..." : "Save"}

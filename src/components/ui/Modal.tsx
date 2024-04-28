@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
 
 type PropsType = { open: boolean; onClose: () => void; children: ReactNode };
 export default function Modal({ open, onClose, children }: PropsType) {
@@ -17,7 +18,10 @@ export default function Modal({ open, onClose, children }: PropsType) {
     [open]
   );
   return createPortal(
-    <dialog
+    <motion.dialog
+      initial={{ y: 100, opacity: 0 }}
+      exit={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       ref={ref}
       onClose={onClose}
       className="rounded-xl w-full max-w-xl backdrop:bg-zinc-900/70 relative"
@@ -29,7 +33,7 @@ export default function Modal({ open, onClose, children }: PropsType) {
       >
         X
       </button>
-    </dialog>,
+    </motion.dialog>,
     document.body
   );
 }

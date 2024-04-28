@@ -1,12 +1,16 @@
+import { FormEvent, useState } from "react";
+
+import { useSession } from "next-auth/react";
 import { app } from "@/firebase";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
-import { useSession } from "next-auth/react";
-import { FormEvent, useState } from "react";
-import Button from "./ui/Button";
 import { serverTimestamp } from "firebase/database";
-import InputGroup from "./ui/InputGroup";
+
 import { SessionType } from "@/helpers/types";
+import InputGroup from "./ui/InputGroup";
+import Button from "./ui/Button";
 import Heading from "./ui/Heading";
+
+const urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/;
 
 type UserDataType = {
   profileImage: string;
@@ -17,8 +21,15 @@ type UserDataType = {
 
 type PropsType = { userData: UserDataType; onCloseForm: () => void };
 export default function LinkForm({ userData, onCloseForm }: PropsType) {
-  const [enteredUrl, setEnteredUrl] = useState("");
-  const [enteredText, setEnteredText] = useState("");
+  const [enteredValues, setEnteredValues] = useState({
+    enteredUrl: "",
+    enteredText: "",
+  });
+
+  const [inputErrors, setInputErrors] = useState<{
+    enteredUrl: string;
+    enteredText: string;
+  }>({ enteredText: "", enteredUrl: "" });
 
   const [btnColor, setBtnColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
@@ -30,7 +41,32 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
 
   async function handleAddLink(event: FormEvent) {
     event.preventDefault();
-    if (!enteredUrl || !data || !userData || !enteredText) return;
+
+    const enteredUrl = enteredValues.enteredUrl;
+    const enteredText = enteredValues.enteredText;
+
+    if (!urlRegex.test(enteredUrl)) {
+      setInputErrors((prev) => ({
+        ...prev,
+        enteredUrl: "Invalid URL. Please enter a valid URL",
+      }));
+    }
+    if (!enteredText.trim().length) {
+      setInputErrors((prev) => ({
+        ...prev,
+        enteredText: "Invalid link text. This line cannot be empty.",
+      }));
+    }
+
+    if (
+      !urlRegex.test(enteredUrl) ||
+      !data ||
+      !userData ||
+      !enteredText.trim().length
+    ) {
+      return;
+    }
+
     setIsLoading(true);
     await addDoc(collection(db, "links", userData.docId, "link"), {
       enteredUrl,
@@ -39,12 +75,16 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
       btnColor,
       timestamp: serverTimestamp(),
     });
-    setEnteredUrl("");
-    setEnteredText("");
+
     setTextColor("#000000");
     setBtnColor("#ffffff");
     onCloseForm();
     setIsLoading(false);
+  }
+
+  function handleChangeInput(value: string, name: string) {
+    setEnteredValues((prev) => ({ ...prev, [name]: value }));
+    setInputErrors((prev) => ({ ...prev, [name]: "" }));
   }
 
   return (
@@ -60,14 +100,18 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
         id="url"
         label="Link URL"
         type="url"
-        value={enteredUrl}
-        onChange={setEnteredUrl}
+        name="enteredUrl"
+        value={enteredValues.enteredUrl}
+        onChange={handleChangeInput}
+        error={inputErrors.enteredUrl}
       />
       <InputGroup
         id="text"
         label="Text"
-        value={enteredText}
-        onChange={setEnteredText}
+        name="enteredText"
+        value={enteredValues.enteredText}
+        onChange={handleChangeInput}
+        error={inputErrors.enteredText}
       />
       <div className="flex items-center justify-center gap-2 flex-col my-4">
         <button
