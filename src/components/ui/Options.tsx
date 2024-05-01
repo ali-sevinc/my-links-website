@@ -111,7 +111,7 @@ export default function Options({ name, bgColor, txtColor }: PropsType) {
       </div>
       <form
         onSubmit={handleChangeDisplayName}
-        className="flex gap-4 items-center"
+        className="flex gap-2 sm:gap-5 items-start sm:items-center flex-col sm:flex-row"
       >
         <InputGroup
           id="displayName"
@@ -130,7 +130,7 @@ export default function Options({ name, bgColor, txtColor }: PropsType) {
       </form>
       <form
         onSubmit={handleChangeTextAndBackgroundColor}
-        className="flex justify-between gap-5 items-center py-4"
+        className="flex justify-between gap-2 items-start sm:gap-5 sm:flex-row sm:items-center py-4 flex-col"
       >
         <div className="flex gap-5">
           <div className="flex items-center gap-2">

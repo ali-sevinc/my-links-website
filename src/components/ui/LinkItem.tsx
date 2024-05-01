@@ -1,5 +1,6 @@
 "use client";
 import { HiOutlineTrash } from "react-icons/hi";
+import { motion } from "framer-motion";
 
 type PropsType = {
   id: string;
@@ -21,24 +22,26 @@ export default function LinkItem({
 }: PropsType) {
   return (
     <li className={` gap-2 rounded-md w-full flex `}>
-      <a
+      <motion.a
+        whileHover={{ x: 3, y: -3 }}
         target="_blank"
         href={url}
         style={{
           backgroundColor: btnColor,
           color: color,
         }}
-        className="w-full border hover:opacity-95 border-zinc-700 hover:translate-x-2 duration-200  px-4 py-2 text-center text-lg rounded-md font-semibold"
+        className="w-full border hover:opacity-95 border-zinc-700 px-4 py-2 text-center text-lg rounded-md font-semibold"
       >
         {text}
-      </a>
+      </motion.a>
       {isAuth && (
-        <button
+        <motion.button
+          whileHover={{ backgroundColor: "#7f1d1d" }}
           onClick={onDelete}
-          className="px-4 bg-red-700 rounded-md text-zinc-50 hover:bg-red-900 duration-200"
+          className="px-4 bg-red-700 rounded-md text-zinc-50"
         >
           <HiOutlineTrash />
-        </button>
+        </motion.button>
       )}
     </li>
   );

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
 
 type PropsType = {
   children: ReactNode;
@@ -9,7 +10,7 @@ type PropsType = {
 };
 
 const commonClasses =
-  "bg-blue-500 text-zinc-50 hover:bg-blue-700 duration-200 disabled:cursor-not-allowed disabled:bg-zinc-300";
+  "bg-blue-500 text-zinc-50 disabled:cursor-not-allowed disabled:bg-zinc-300";
 const buttonModel = {
   small: " text-sm px-2 py-1 rounded-sm",
   medium: " px-4 py-2 rounded",
@@ -24,13 +25,14 @@ export default function Button({
   disabled,
 }: PropsType) {
   return (
-    <button
+    <motion.button
+      whileHover={{ backgroundColor: "#1d4ed8" }}
       disabled={disabled}
       type={type}
       onClick={onClick ? onClick : () => {}}
       className={`${commonClasses} ${buttonModel[model]}`}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }

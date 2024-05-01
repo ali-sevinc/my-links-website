@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <SessionWrapper>
       <html lang="en" className={`${nunito.variable} ${roboto.variable}`}>
-        <body className="min-h-screen bg-repeat-round bg-gradient-to-br from-zinc-500 to-zinc-800 text-zinc-100 via-zinc-700 ">
+        <body className="min-h-screen bg-repeat-round bg-gradient-to-tr from-blue-950 via-blue-700 to-blue-600 text-zinc-100  ">
           <Suspense>
             <main className=" pt-4 pb-28">{children}</main>
           </Suspense>

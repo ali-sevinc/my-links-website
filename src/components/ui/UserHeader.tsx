@@ -2,10 +2,9 @@
 import { signOut } from "next-auth/react";
 import Button from "./Button";
 import { useEffect, useState } from "react";
-import { HiCheck, HiClipboardCopy } from "react-icons/hi";
+import { HiCheck } from "react-icons/hi";
 
-import { FaCog } from "react-icons/fa";
-
+import { FaCog, FaLink } from "react-icons/fa";
 type PropsType = {
   onShowOptions: () => void;
 };
@@ -38,10 +37,19 @@ export default function UserHeader({ onShowOptions }: PropsType) {
   return (
     <>
       <header className="flex gap-4 justify-end px-4 relative">
-        <Button model="medium" onClick={handleCopyUrl}>
-          {isCoppied ? <HiCheck /> : <HiClipboardCopy />}
+        <Button model="small" onClick={handleCopyUrl}>
+          {isCoppied ? (
+            <p className="flex items-center gap-1 w-24 justify-center ">
+              <HiCheck /> <span>Coppied</span>
+            </p>
+          ) : (
+            <p className="flex items-center gap-1 w-24 justify-center ">
+              <FaLink />
+              <span>Share URL</span>
+            </p>
+          )}
         </Button>
-        <Button onClick={onShowOptions}>
+        <Button model="small" onClick={onShowOptions}>
           <FaCog />
         </Button>
         <Button model="small" onClick={() => signOut()}>

@@ -26,8 +26,6 @@ import { AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import { motion } from "framer-motion";
-
 import { useEffect, useState } from "react";
 
 type UserDataType = {
