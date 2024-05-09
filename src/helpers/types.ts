@@ -8,4 +8,5 @@ export type SessionType = {
       username: string;
     };
   } | null;
+  status: "authenticated" | "loading" | "unauthenticated";
 };

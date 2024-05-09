@@ -1,5 +1,5 @@
 "use client";
-import { HiOutlineTrash } from "react-icons/hi";
+import { HiOutlineTrash, HiOutlineDotsHorizontal } from "react-icons/hi";
 import { motion } from "framer-motion";
 
 type PropsType = {
@@ -10,6 +10,7 @@ type PropsType = {
   text: string;
   isAuth: boolean;
   onDelete: () => void;
+  onChange: () => void;
 };
 export default function LinkItem({
   id,
@@ -19,6 +20,7 @@ export default function LinkItem({
   text,
   isAuth,
   onDelete,
+  onChange,
 }: PropsType) {
   return (
     <li className={` gap-2 rounded-md w-full flex `}>
@@ -35,13 +37,22 @@ export default function LinkItem({
         {text}
       </motion.a>
       {isAuth && (
-        <motion.button
-          whileHover={{ backgroundColor: "#7f1d1d" }}
-          onClick={onDelete}
-          className="px-4 bg-red-700 rounded-md text-zinc-50"
-        >
-          <HiOutlineTrash />
-        </motion.button>
+        <>
+          <motion.button
+            whileHover={{ backgroundColor: "#7f1d1d" }}
+            onClick={onDelete}
+            className="px-4 bg-red-700 rounded-md text-zinc-50"
+          >
+            <HiOutlineTrash />
+          </motion.button>
+          <motion.button
+            whileHover={{ backgroundColor: "#172554" }}
+            className="px-4 bg-blue-800 rounded-md text-zinc-50"
+            onClick={onChange}
+          >
+            <HiOutlineDotsHorizontal />
+          </motion.button>
+        </>
       )}
     </li>
   );

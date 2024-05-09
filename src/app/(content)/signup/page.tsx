@@ -17,6 +17,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { HiArrowLeft } from "react-icons/hi";
 
 type UserDataType = {
   profileImage: string;
@@ -26,7 +27,7 @@ type UserDataType = {
 };
 
 export default function SignUpPage() {
-  const { data } = useSession() as SessionType;
+  const { data, status } = useSession() as SessionType;
   const db = getFirestore(app);
   const router = useRouter();
 
@@ -64,15 +65,16 @@ export default function SignUpPage() {
 
   return (
     <Container>
-      {!data && (
+      {status === "loading" && (
+        <p className="text-lg animate-pulse">Loading...</p>
+      )}
+      {!data && status === "unauthenticated" && (
         <>
-          <h2 className="font-semibold text-lg">
-            Click to the button to create your account with gmail.
-          </h2>
           <div className="flex gap-4 items-center">
-            <Link href={"/"} className="hover:underline">
-              Go Back
+            <Link href={"/"} className="hover:underline flex items-center">
+              <HiArrowLeft /> Go Back
             </Link>
+            <b>or</b>
             <Button onClick={() => signIn()}>Sign Up</Button>
           </div>
         </>

@@ -48,6 +48,8 @@ export default function UserPage({ params }: { params: { username: string } }) {
   const [userData, setUserData] = useState<UserDataType | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
+  const [selectedLink, setSelectedLink] = useState<null | LinkType>(null);
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [storedLinks, setStoredLinks] = useState<LinkType[]>([]);
@@ -111,6 +113,15 @@ export default function UserPage({ params }: { params: { username: string } }) {
     await deleteDoc(doc(db, "links", userData.docId, "link", id));
   }
 
+  function handleShowChangeForm(id: string) {
+    const selectedLink = storedLinks.find((link) => link.id === id);
+    if (!selectedLink) return;
+    setSelectedLink(selectedLink);
+  }
+  function handleHideChangeForm() {
+    setSelectedLink(null);
+  }
+
   function handleShowForm() {
     setShowAddForm(true);
   }
@@ -156,6 +167,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
             {storedLinks.map((link) => (
               <LinkItem
                 onDelete={() => handleDeleteLink(link.id)}
+                onChange={() => handleShowChangeForm(link.id)}
                 isAuth={data !== null}
                 text={link.enteredText}
                 btnColor={link.btnColor}
@@ -186,6 +198,26 @@ export default function UserPage({ params }: { params: { username: string } }) {
               <Button onClick={handleShowForm}>Add New Link</Button>
             </p>
           </>
+        )}
+        {isAuth && userData && (
+          <AnimatePresence mode="wait">
+            {selectedLink !== null && (
+              <Modal
+                open={selectedLink !== null}
+                onClose={handleHideChangeForm}
+              >
+                <LinkForm
+                  userData={userData}
+                  onCloseForm={handleHideChangeForm}
+                  bgColor={selectedLink?.btnColor}
+                  link={selectedLink?.enteredUrl}
+                  text={selectedLink?.enteredText}
+                  txtColor={selectedLink?.textColor}
+                  linkId={selectedLink.id}
+                />
+              </Modal>
+            )}
+          </AnimatePresence>
         )}
       </div>
       <AnimatePresence>

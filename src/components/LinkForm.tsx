@@ -2,7 +2,13 @@ import { FormEvent, useState } from "react";
 
 import { useSession } from "next-auth/react";
 import { app } from "@/firebase";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  updateDoc,
+} from "firebase/firestore";
 import { serverTimestamp } from "firebase/database";
 
 import { SessionType } from "@/helpers/types";
@@ -19,11 +25,27 @@ type UserDataType = {
   docId: string;
 };
 
-type PropsType = { userData: UserDataType; onCloseForm: () => void };
-export default function LinkForm({ userData, onCloseForm }: PropsType) {
+type PropsType = {
+  userData: UserDataType;
+  onCloseForm: () => void;
+  link?: string;
+  text?: string;
+  bgColor?: string;
+  txtColor?: string;
+  linkId?: string;
+};
+export default function LinkForm({
+  userData,
+  onCloseForm,
+  link = "",
+  text = "",
+  bgColor = "#ffffff",
+  txtColor = "#000000",
+  linkId,
+}: PropsType) {
   const [enteredValues, setEnteredValues] = useState({
-    enteredUrl: "",
-    enteredText: "",
+    enteredUrl: link,
+    enteredText: text,
   });
 
   const [inputErrors, setInputErrors] = useState<{
@@ -31,8 +53,8 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
     enteredText: string;
   }>({ enteredText: "", enteredUrl: "" });
 
-  const [btnColor, setBtnColor] = useState("#ffffff");
-  const [textColor, setTextColor] = useState("#000000");
+  const [btnColor, setBtnColor] = useState(bgColor);
+  const [textColor, setTextColor] = useState(txtColor);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -68,13 +90,25 @@ export default function LinkForm({ userData, onCloseForm }: PropsType) {
     }
 
     setIsLoading(true);
-    await addDoc(collection(db, "links", userData.docId, "link"), {
-      enteredUrl,
-      enteredText,
-      textColor,
-      btnColor,
-      timestamp: serverTimestamp(),
-    });
+    if (text === "" && link === "") {
+      await addDoc(collection(db, "links", userData.docId, "link"), {
+        enteredUrl,
+        enteredText,
+        textColor,
+        btnColor,
+        timestamp: serverTimestamp(),
+      });
+    }
+    if (text !== "" && link !== "" && linkId) {
+      const linkRef = doc(db, "links", userData.docId, "link", linkId);
+      await updateDoc(linkRef, {
+        enteredUrl,
+        enteredText,
+        textColor,
+        btnColor,
+        timestamp: serverTimestamp(),
+      });
+    }
 
     setTextColor("#000000");
     setBtnColor("#ffffff");
