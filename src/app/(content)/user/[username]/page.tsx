@@ -1,14 +1,9 @@
 "use client";
 
-import LinkForm from "@/components/LinkForm";
-import Button from "@/components/ui/Button";
-import LinkItem from "@/components/ui/LinkItem";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import Message from "@/components/ui/Message";
-import Modal from "@/components/ui/Modal";
-import Options from "@/components/ui/Options";
-import ProfileCard from "@/components/ui/ProfileCard";
-import UserHeader from "@/components/ui/UserHeader";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import { app } from "@/firebase";
 import { SessionType } from "@/helpers/types";
 import {
@@ -23,10 +18,16 @@ import {
   where,
 } from "firebase/firestore";
 import { AnimatePresence } from "framer-motion";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import LinkForm from "@/components/LinkForm";
+import Button from "@/components/ui/Button";
+import LinkItem from "@/components/ui/LinkItem";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import Message from "@/components/ui/Message";
+import Modal from "@/components/ui/Modal";
+import Options from "@/components/ui/Options";
+import ProfileCard from "@/components/ui/ProfileCard";
+import UserHeader from "@/components/ui/UserHeader";
 
 type UserDataType = {
   profileImage: string;
@@ -113,10 +114,8 @@ export default function UserPage({ params }: { params: { username: string } }) {
     await deleteDoc(doc(db, "links", userData.docId, "link", id));
   }
 
-  function handleShowChangeForm(id: string) {
-    const selectedLink = storedLinks.find((link) => link.id === id);
-    if (!selectedLink) return;
-    setSelectedLink(selectedLink);
+  function handleShowChangeForm(link: LinkType) {
+    setSelectedLink(link);
   }
   function handleHideChangeForm() {
     setSelectedLink(null);
@@ -167,7 +166,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
             {storedLinks.map((link) => (
               <LinkItem
                 onDelete={() => handleDeleteLink(link.id)}
-                onChange={() => handleShowChangeForm(link.id)}
+                onChange={() => handleShowChangeForm(link)}
                 isAuth={data !== null}
                 text={link.enteredText}
                 btnColor={link.btnColor}
